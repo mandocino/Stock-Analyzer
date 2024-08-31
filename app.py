@@ -7,6 +7,10 @@ app = Flask(__name__)
 def home():
     return render_template('analyzerHomepage.html')
 
+@app.route('/analyzerHomepage')
+def analyzeHomepage():
+    return render_template('analyzerHomepage.html')
+
 @app.route('/analyze/<query>', methods=['GET'])
 def analyze(query):
     GetTickerInformation = None
@@ -15,7 +19,7 @@ def analyze(query):
         GetTickerInformation = yahooFinance.Ticker(query)
         return render_template('stockAnalyzed.html', GetTickerInformation=GetTickerInformation)
     except:
-        return render_template('homepage.html')
+        return render_template('analyzerHomepage.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

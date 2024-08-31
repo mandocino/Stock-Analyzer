@@ -8,13 +8,190 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
 
-<body>
-    <div class="flex justify-center bg-gray-100 pt-10">
-        <div class="bg-white rounded-lg shadow-md p-8 mb-10 flex flex-col items-center w-[1000px]">
-            <h1 class="text-3xl font-semibold mb-4 text-center">Analysis of {{ GetTickerInformation.ticker }}
-            </h1>
+<body class="flex flex-col min-h-screen">
+    <div class="flex-grow">
+        <div class="flex justify-center bg-gray-100 pt-10">
+            <div class="bg-white rounded-lg shadow-md p-8 mb-10 flex flex-col items-center w-[1000px]">
+                <h1 class="text-3xl font-semibold mb-4 text-center">Analysis of {{ GetTickerInformation.ticker }}</h1>
+                {% if GetTickerInformation.info.get('previousClose') < 1 %} <p class="text-red-500 mb-2">*Warning: Penny
+                    Stock*</p>
+                    {% endif %}
+                    <p class="text-2xl mb-2">Sector: {{ GetTickerInformation.info.get('sector') }}</p>
+
+                    <div class="flex items-center justify-center w-full">
+                        <div class="text-green-500 rounded-l-lg border-r border-black p-4">
+                            <p class="text-2xl mb-2">&nbsp;&nbsp;&nbsp;Bid</p>
+                            <p class="text-2xl mb-2">${{ GetTickerInformation.info.get('bid') }}</p>
+                            <p class="text-2xl mb-2">Qty: {{ GetTickerInformation.info.get('bidSize') }}</p>
+                        </div>
+
+                        <div class="text-red-500 rounded-r-lg border-l border-black p-4">
+                            <p class="text-2xl mb-2">&nbsp;&nbsp;&nbsp;Ask</p>
+                            <p class="text-2xl mb-2">${{ GetTickerInformation.info.get('ask') }}</p>
+                            <p class="text-2xl mb-2">Qty: {{ GetTickerInformation.info.get('askSize') }}</p>
+                        </div>
+                    </div>
+                    {% if GetTickerInformation.info.get('sharesOutstanding') != None %}
+                    <p class="text-2xl mb-2">Outstanding Shares: {{ GetTickerInformation.info.get('sharesOutstanding') |
+                        format_value }}
+                        {% if GetTickerInformation.info.get('sharesOutstanding') > 10 %}
+                        <i class="text-green-500 ml-2 fas fa-info-circle"
+                            title="Number of shares traded last closed day."></i>
+                        <span class="text-green-500 ml-2">High number of outstanding shares to mc</span>
+                        {% else %}
+                        <i class="text-red-500 ml-2 fas fa-info-circle"
+                            title="Number of shares traded last closed day."></i>
+                        <span class="text-red-500 ml-2">Great Float</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Outstanding Shares: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('floatShares') != None %}
+                    <p class="text-2xl mb-2">Free Float: {{ GetTickerInformation.info.get('floatShares') | format_value
+                        }}
+                        {% if GetTickerInformation.info.get('floatShares') > 10 %}
+                        <i class="text-green-500 ml-2 fas fa-info-circle"
+                            title="Number of shares traded last closed day."></i>
+                        <span class="text-green-500 ml-2">High free float</span>
+                        {% else %}
+                        <i class="text-red-500 ml-2 fas fa-info-circle"
+                            title="Number of shares traded last closed day."></i>
+                        <span class="text-red-500 ml-2">Good free float</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Volume: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('volume') != None %}
+                    <p class="text-2xl mb-2">Volume: {{ GetTickerInformation.info.get('volume') | format_value }}
+                        {% if GetTickerInformation.info.get('volume') > 10 %}
+                        <i class="text-green-500 ml-2 fas fa-info-circle"
+                            title="Number of shares traded last closed day."></i>
+                        <span class="text-green-500 ml-2">Good Liquidity</span>
+                        {% else %}
+                        <i class="text-red-500 ml-2 fas fa-info-circle"
+                            title="Number of shares traded last closed day."></i>
+                        <span class="text-red-500 ml-2">Bad Liquidity</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Volume: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('marketCap') != None %}
+                    <p class="text-2xl mb-2">Market Cap: {{ GetTickerInformation.info.get('marketCap') | format_value }}
+                        {% if GetTickerInformation.info.get('marketCap') > 10 %}
+                        <i class="text-green-500 ml-2 fas fa-info-circle"
+                            title="Total value of all a company's shares."></i>
+                        <span class="text-green-500 ml-2">Large Cap</span>
+                        {% else %}
+                        <i class="text-red-500 ml-2 fas fa-info-circle"
+                            title="Total value of all a company's shares."></i>
+                        <span class="text-red-500 ml-2">Small Cap</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Market Cap: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('totalDebt') != None %}
+                    <p class="text-2xl mb-2">Total Debt: {{ GetTickerInformation.info.get('totalDebt') | format_value }}
+                        {% if GetTickerInformation.info.get('totalDebt') > 10 %}
+                        <i class="text-green-500 ml-2 fas fa-info-circle"
+                            title="Total debt on last financial statement."></i>
+                        <span class="text-green-500 ml-2">Good Debt</span>
+                        {% else %}
+                        <i class="text-red-500 ml-2 fas fa-info-circle"
+                            title="Total debt on last financial statement."></i>
+                        <span class="text-red-500 ml-2">Bad Debt</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Total Debt: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('totalRevenue') != None %}
+                    <p class="text-2xl mb-2">Total Revenue: {{ GetTickerInformation.info.get('totalRevenue') |
+                        format_value
+                        }}
+                        {% if GetTickerInformation.info.get('totalRevenue') > 10 %}
+                        <i class="text-green-500 ml-2 fas fa-info-circle"
+                            title="Total revenue on last financial statement."></i>
+                        <span class="text-green-500 ml-2">Good Revenue</span>
+                        {% else %}
+                        <i class="text-red-500 ml-2 fas fa-info-circle"
+                            title="Total revenue on last financial statement."></i>
+                        <span class="text-red-500 ml-2">Bad Revenue</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Total Revenue: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('trailingPE') != None %}
+                    <p class="text-2xl mb-2">PE: {{ GetTickerInformation.info.get('trailingPE') | format_value }}
+                        {% if GetTickerInformation.info.get('trailingPE') > 10 %}
+                        <i class="text-green-500 ml-2 fas fa-info-circle"
+                            title="Price to earnings ration: how many more times its overvalued compared to their actual earnings?"></i>
+                        <span class="text-green-500 ml-2">Good PE</span>
+                        {% else %}
+                        <i class="text-red-500 ml-2 fas fa-info-circle"
+                            title="Price to earnings ration: how many more times its overvalued compared to their actual earnings?"></i>
+                        <span class="text-red-500 ml-2">High PE</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">PE: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('yield') != None %}
+                    <p class="text-2xl mb-4">Yield %: {{ GetTickerInformation.info.get('yield') | format_decimal }}%</p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Yield %: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('heldPercentInsiders') != None %}
+                    <p class="text-2xl mb-4">Insiders %: {{ GetTickerInformation.info.get('heldPercentInsiders') |
+                        format_decimal
+                        }}%
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Insiders %: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('heldPercentInstitutions') != None %}
+                    <p class="text-2xl mb-4">Institutions %: {{ GetTickerInformation.info.get('heldPercentInstitutions')
+                        |
+                        format_decimal }}%</p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Institutions %: None</p>
+                    {% endif %}
+
+                    {% if GetTickerInformation.info.get('freeCashflow') != None %}
+                    <p class="text-2xl mb-2">PE: {{ GetTickerInformation.info.get('freeCashflow') | format_value }}
+                        {% if GetTickerInformation.info.get('freeCashflow') > 10 %}
+                        <i class="text-green-500 ml-2 fas fa-info-circle"
+                            title="Cash left over after paying its expenses."></i>
+                        <span class="text-green-500 ml-2">Positive Free Cash Flow</span>
+                        {% else %}
+                        <i class="text-red-500 ml-2 fas fa-info-circle"
+                            title="Cash left over after paying its expenses."></i>
+                        <span class="text-red-500 ml-2">Negative Free Cash Flow</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="text-2xl mb-4">Free Cash Flow: None</p>
+                    {% endif %}
+                    <a href="{{ url_for('analyzeHomepage') }}" class="bg-gray-800 text-white px-4 py-2 rounded-md">
+                        Back to Homepage
+                    </a>
+            </div>
         </div>
     </div>
+
     <footer class="bg-gray-800 text-white text-center py-2">
         <p>Created By Armando Mancino. 2023.</p>
     </footer>
